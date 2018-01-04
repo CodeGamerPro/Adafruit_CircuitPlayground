@@ -28,7 +28,7 @@ Based on code for the adjustable sensitivity version of amplitie from:
 #define PEAK_FALL        4  // Rate of falling peak dot
 
 #define INPUT_FLOOR     56  // Lower range of mic sensitivity
-#define INPUT_CEILING  110  // Max range of analogRead input, the lower the value the more sensitive (1023 = max)
+#define INPUT_CEILING  110  // Upper range of mic sensitivity
 
 byte peak = 16;        // Peak level of column; used for falling dots
 unsigned int sample;

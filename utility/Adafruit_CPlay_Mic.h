@@ -6,9 +6,7 @@
 #ifndef ADAFRUIT_CPLAY_MIC_H
 #define ADAFRUIT_CPLAY_MIC_H
 
-#if !defined(__AVR__)
 #include "Adafruit_ZeroPDM.h"
-#endif
 
 class Adafruit_CPlay_Mic {
  public:
@@ -20,7 +18,7 @@ class Adafruit_CPlay_Mic {
   float soundPressureLevel(uint16_t ms);
 
 private:
-#if !defined(__AVR__)
+#if defined(ARDUINO_ARCH_SAMD)
 	static Adafruit_ZeroPDM pdm;
 #endif
 };

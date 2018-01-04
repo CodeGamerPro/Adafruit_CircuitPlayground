@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include "Adafruit_CPlay_Mic.h"
 
-#if !defined(__AVR__)
+#if defined(ARDUINO_ARCH_SAMD)
 
 #define SAMPLERATE_HZ 22000
 #define DECIMATION    64
@@ -147,33 +147,15 @@ void Adafruit_CPlay_Mic::capture(int16_t *buf, uint16_t nSamples) {
   ADCSRB = adcsrb_save;
   ADCSRA = adcsra_save;
   (void)analogRead(A4);                // Purge residue from ADC register
-#else
-#endif
-}
-
-float Adafruit_CPlay_Mic::soundPressureLevel(uint16_t ms){
-  float gain;
-  int16_t *ptr;
-#ifdef __AVR__
-  gain = 4.5;
-  uint16_t len = 9.615 * ms;
-  int16_t data[len];
-
-  capture(data, len);
-#else
-  gain = 9;
-
+#elif defined(ARDUINO_ARCH_SAMD)
   if(!pdmConfigured){
     pdm.begin();
     pdm.configure(SAMPLERATE_HZ * DECIMATION / 16, true);
     pdmConfigured = true;
   }
 
-  uint16_t len = (float)(SAMPLERATE_HZ/1000) * ms;
-  int16_t data[len];
-  ptr = data;
-
-  while(ptr < (data + len)){
+  int16_t *ptr = buf;
+  while(ptr < (buf + nSamples)){
     uint16_t runningsum = 0;
     uint16_t *sinc_ptr = sincfilter;
 
@@ -201,7 +183,27 @@ float Adafruit_CPlay_Mic::soundPressureLevel(uint16_t ms){
 
     *ptr++ = runningsum;
   }
+#else
+  #error "no compatible architecture defined."
 #endif
+}
+
+float Adafruit_CPlay_Mic::soundPressureLevel(uint16_t ms){
+  float gain;
+  int16_t *ptr;
+  uint16_t len;
+#ifdef __AVR__
+  gain = 4.5;
+  len = 9.615 * ms;
+#elif defined(ARDUINO_ARCH_SAMD)
+  gain = 9;
+  len = (float)(SAMPLERATE_HZ/1000) * ms;
+#else
+  #error "no compatible architecture defined."
+#endif
+  int16_t data[len];
+  capture(data, len);
+
   int16_t *end = data + len;
   float pref = 0.00002;
 

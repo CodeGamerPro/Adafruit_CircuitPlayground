@@ -13,11 +13,6 @@ Based on code for the adjustable sensitivity version of amplitie from:
  Written by Adafruit Industries.  Distributed under the BSD license.
  This paragraph must be included in any redistribution.
  
- fscale function:
- Floating Point Autoscale Function V0.1
- Written by Paul Badger 2007
- Modified from code by Greg Shakar
- 
  */
 #include <Adafruit_CircuitPlayground.h>
 #include <Wire.h>
@@ -27,8 +22,8 @@ Based on code for the adjustable sensitivity version of amplitie from:
 #define PEAK_HANG       24  // Time of pause before peak dot falls
 #define PEAK_FALL        4  // Rate of falling peak dot
 
-#define INPUT_FLOOR     56  // Lower range of mic sensitivity
-#define INPUT_CEILING  110  // Upper range of mic sensitivity
+#define INPUT_FLOOR     56  // Lower range of mic sensitivity in dB SPL
+#define INPUT_CEILING  110  // Upper range of mic sensitivity in db SPL
 
 byte peak = 16;        // Peak level of column; used for falling dots
 unsigned int sample;

@@ -234,7 +234,10 @@ float Adafruit_CPlay_Mic::soundPressureLevel(uint16_t ms){
    /*******************************
    *   CALCULATE SPL
    ******************************/
-   return 20 * log10(conv/pref);
+   conv = 20 * log10(conv/pref);
+
+   if(isfinite(conv)) return conv;
+   else return 0;
 }
 
 // -------------------------------------------------------------------------
